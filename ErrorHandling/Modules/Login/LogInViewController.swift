@@ -26,6 +26,8 @@ open class LogInViewController: DSViewController {
 
   // MARK: Internal
 
+  let viewModel: LoginViewModel = .init()
+
   // Show content
   func showContent() {
     // Text
@@ -37,13 +39,9 @@ open class LogInViewController: DSViewController {
       size: .init(width: 80, height: 80),
       spacing: 25)
 
-    composer.add(
-      sfSymbol: "circle.stack.3d.down.right.fill",
-      style: .custom(size: 60, weight: .medium),
-      tint: .headline,
-      spacing: 50)
-
-    composer.add(type: .body, text: "Meet new people from over millions of users. Create posts, find friends and more.")
+    composer.add(type: .largeTitle, text: "Error Handling")
+    composer.add(type: .headline, text: "Wrapping")
+    composer.add(type: .subheadline, text: "The one where we wrap Apple Sign in, in a delegate")
     let text = composer.textViewModel()
 
     // Text section
@@ -61,27 +59,15 @@ open class LogInViewController: DSViewController {
       text: "or sign up with Email",
       alignment: .center)
 
-    // Facebook
     var apple = DSButtonVM(
       title: "Sign in with Apple",
       icon: UIImage(named: "apple"),
       textAlignment: .left)
     { [unowned self] _ in
-      self.dismiss()
+      self.viewModel.attemptAppleSignIn()
     }
 
     apple.imagePosition = .left
-
-    // Twitter
-    var google = DSButtonVM(
-      title: "Sign in with Google",
-      icon: UIImage(named: "google"),
-      textAlignment: .left)
-    { [unowned self] _ in
-      self.dismiss()
-    }
-
-    google.imagePosition = .left
 
     // Sign up
     var signUpEmail = DSButtonVM(
@@ -106,7 +92,7 @@ open class LogInViewController: DSViewController {
 
     // Show bottom button
     showBottom(content: [
-      [apple, google].list().doubleMarginLeftRightInsets(),
+      [apple].list().doubleMarginLeftRightInsets(),
       [emailLabel].list(),
       [signUpEmail].list().doubleMarginLeftRightInsets(),
       [logInWithEmail].list(),
