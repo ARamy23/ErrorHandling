@@ -58,7 +58,9 @@ open class ItemDetailsViewController: DSViewController {
         }
         
         // Show bottom content
-        showBottom(content: [priceView(), addToCart].list())
+        showBottom(content: [
+          priceView(), addToCart
+        ].grid())
     }
 }
 

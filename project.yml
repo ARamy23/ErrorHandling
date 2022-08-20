@@ -12,6 +12,8 @@ packages:
   DSKit:
     url: https://github.com/imodeveloperlab/dskit
     branch: development
+localPackages:
+  - ./OrdiLogging
 settings:
   DEVELOPMENT_TEAM: Ahmed Ramy
 targets:
@@ -20,13 +22,17 @@ targets:
     platform: iOS
     deploymentTarget: 15.0
     sources: [ErrorHandling]
+    scheme:
+      gatherCoverageData: true
+      coverageTargets:
+        - ErrorHandling
     settings:
       base:
         MARKETING_VERSION: 0.0.0
         CURRENT_PROJECT_VERSION: 1
         DEVELOPMENT_TEAM: 969Y6REAB6
-        OTHER_LDFLAGS: -Xlinker -interposable
         INFOPLIST_FILE: ErrorHandling/Common/Supporting Files/Info.plist
+
       configs:
         Debug:
           BUNDLE_DISPLAY_NAME: "ErrorHandling Dev"
@@ -76,6 +82,11 @@ targets:
                 UISceneDelegateClassName: $(PRODUCT_MODULE_NAME).SceneDelegate
     dependencies:
       - package: DSKit
+        product:
+          - DSKit
+          - DSKitFakery
+      - package: OrdiLogging
+        product: OrdiPulseLogging
     preBuildScripts:
       - script: >-
           if which swiftgen >/dev/null; then
