@@ -10,23 +10,25 @@
 //  Created by Borinschi Ivan on 02.03.2021.
 //
 
+import Combine
 import DSKit
 import UIKit
 
 // MARK: - LogInViewController
 
-open class LogInViewController: DSViewController {
+open class LogInViewController: BaseViewController {
   // MARK: Open
 
   open override func viewDidLoad() {
     super.viewDidLoad()
     showContent()
     showBottomContent()
+    viewModel.$state.sink { [weak self] state in
+      self?.handle(error: state.error)
+    }.store(in: &cancellables)
   }
 
   // MARK: Internal
-
-  let viewModel: LoginViewModel = .init()
 
   // Show content
   func showContent() {
@@ -98,6 +100,11 @@ open class LogInViewController: DSViewController {
       [logInWithEmail].list(),
     ])
   }
+
+  // MARK: Private
+
+  private let viewModel: LoginViewModel = .init()
+  private var cancellables = Set<AnyCancellable>()
 }
 
 // MARK: - SwiftUI Preview

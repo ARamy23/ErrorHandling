@@ -12,9 +12,15 @@ packages:
   DSKit:
     url: https://github.com/imodeveloperlab/dskit
     branch: development
+  DSKitFakery:
+    url: https://github.com/imodeveloperlab/dskit
+    branch: development
   Inject:
     url: https://github.com/krzysztofzablocki/Inject
     branch: main
+  SPIndicator:
+    url: https://github.com/ivanvorobei/SPIndicator
+    majorVersion: 1.6.4
 localPackages:
   - ./OrdiLogging
   - ./Utils
@@ -88,9 +94,8 @@ targets:
     dependencies:
       - package: Inject
       - package: DSKit
-        product: DSKit
-        prodcut: DSKitFakery
+      - package: DSKitFakery
       - package: OrdiLogging
-        product: OrdiLogging
         product: OrdiPulseLogging
       - package: Utils
+      - package: SPIndicator

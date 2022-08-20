@@ -10,7 +10,19 @@ import Utils
 
 // MARK: - AppleSignInError
 
-struct AppleSignInError: PresentationError { }
+struct AppleSignInError: PresentationError {
+  let title: String
+  let description: String?
+  let type: PresentationMethod
+  let icon: UIImage?
+
+  init(title: String, description: String? = nil, type: PresentationMethod = .indicator, icon: UIImage? = nil) {
+    self.title = title
+    self.description = description
+    self.type = type
+    self.icon = icon
+  }
+}
 
 // MARK: - AppleSignInViewModel
 
@@ -47,7 +59,8 @@ class AppleSignInViewModel {
 
   private lazy var onErrorHandler: Callback<ASAuthorizationError> = { [weak self] error in
     guard let self = self else { return }
-    self.state = .failure(error)
+    self.state = .failure(
+      AppleSignInError(title: error.localizedDescription))
   }
 }
 
@@ -55,7 +68,7 @@ extension AppleSignInViewModel {
   enum State {
     case idle
     case success
-    case failure(ASAuthorizationError)
+    case failure(AppleSignInError)
   }
 }
 
