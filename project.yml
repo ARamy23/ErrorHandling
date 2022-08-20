@@ -12,6 +12,9 @@ packages:
   DSKit:
     url: https://github.com/imodeveloperlab/dskit
     branch: development
+  Inject:
+    url: https://github.com/krzysztofzablocki/Inject
+    branch: main
 localPackages:
   - ./OrdiLogging
   - ./Utils
@@ -32,6 +35,7 @@ targets:
         MARKETING_VERSION: 0.0.0
         CURRENT_PROJECT_VERSION: 1
         DEVELOPMENT_TEAM: 969Y6REAB6
+        OTHER_LDFLAGS: -Xlinker -interposable
         INFOPLIST_FILE: ErrorHandling/Common/Supporting Files/Info.plist
 
       configs:
@@ -82,10 +86,11 @@ targets:
               - UISceneConfigurationName: Default Configuration
                 UISceneDelegateClassName: $(PRODUCT_MODULE_NAME).SceneDelegate
     dependencies:
+      - package: Inject
       - package: DSKit
-        product:
-          - DSKit
-          - DSKitFakery
+        product: DSKit
+        prodcut: DSKitFakery
       - package: OrdiLogging
+        product: OrdiLogging
         product: OrdiPulseLogging
       - package: Utils
