@@ -9,9 +9,10 @@
 import DSKit
 import UIKit
 
+// swiftlint: disable function_body_length
+
 public class ShopCustomFontAppearance: DSDesignable {
   // MARK: Lifecycle
-
 
   /// Init DSKit appearance with specific brand color
   /// - Parameter brandColor: UIColor
@@ -146,7 +147,6 @@ public class ShopCustomFontAppearance: DSDesignable {
   }
 
   // MARK: Public
-
 
   // Appearance title
   public var title: String

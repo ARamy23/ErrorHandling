@@ -48,7 +48,6 @@ import UIKit.UIWindow
 open class ApplicationPluggableDelegate: UIResponder, UIApplicationDelegate {
   // MARK: Lifecycle
 
-
   public override init() {
     super.init()
 
@@ -57,7 +56,6 @@ open class ApplicationPluggableDelegate: UIResponder, UIApplicationDelegate {
   }
 
   // MARK: Open
-
 
   /// List of application plugins for binding to `AppDelegate` events
   open func plugins() -> [ApplicationPlugin] { [] } // Override

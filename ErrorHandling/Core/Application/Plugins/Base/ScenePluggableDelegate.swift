@@ -40,7 +40,6 @@ import UIKit.UIWindowScene
 open class ScenePluggableDelegate: UIResponder, UIWindowSceneDelegate {
   // MARK: Lifecycle
 
-
   public override init() {
     super.init()
 
@@ -49,7 +48,6 @@ open class ScenePluggableDelegate: UIResponder, UIWindowSceneDelegate {
   }
 
   // MARK: Open
-
 
   /// List of scene plugins for binding to `SceneDelegate` events
   open func plugins() -> [ScenePlugin] { [] } // Override

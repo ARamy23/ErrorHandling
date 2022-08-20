@@ -12,7 +12,6 @@ import UIKit
 public class DarkLightAppearance: DSDesignable {
   // MARK: Lifecycle
 
-
   /// Init DSKit appearance with specific brand color
   /// - Parameter brandColor: UIColor
   public init(brandColor: UIColor? = nil) {
@@ -146,7 +145,6 @@ public class DarkLightAppearance: DSDesignable {
   }
 
   // MARK: Public
-
 
   // Appearance title
   public var title: String

@@ -34,4 +34,3 @@ extension SceneDelegate {
     window?.rootViewController = view
   }
 }
-

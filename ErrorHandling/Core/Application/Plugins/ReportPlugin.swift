@@ -17,7 +17,7 @@ struct ReportPlugin { }
 // MARK: ApplicationPlugin
 
 extension ReportPlugin: ApplicationPlugin {
-  func application(_: UIApplication, didFinishLaunchingWithOptions _: [UIApplication.LaunchOptionsKey : Any]?) -> Bool {
+  func application(_: UIApplication, didFinishLaunchingWithOptions _: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
     setup()
     return true
   }

@@ -9,9 +9,10 @@
 import DSKit
 import UIKit
 
+// swiftlint: disable function_body_length
+
 public class BlackToneAppearance: DSDesignable {
   // MARK: Lifecycle
-
 
   /// Init system appearance with brand color, or primary color of your app
   /// - Parameter primaryBrandColor: UIColor
@@ -91,7 +92,6 @@ public class BlackToneAppearance: DSDesignable {
   }
 
   // MARK: Public
-
 
   // Appearance title
   public var title: String

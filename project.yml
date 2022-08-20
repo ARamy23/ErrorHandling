@@ -14,6 +14,7 @@ packages:
     branch: development
 localPackages:
   - ./OrdiLogging
+  - ./Utils
 settings:
   DEVELOPMENT_TEAM: Ahmed Ramy
 targets:
@@ -87,38 +88,4 @@ targets:
           - DSKitFakery
       - package: OrdiLogging
         product: OrdiPulseLogging
-    preBuildScripts:
-      - script: >-
-
-          export PATH="$PATH:/opt/homebrew/bin"
-
-          if which swiftgen >/dev/null; then
-            swiftgen
-          else
-            echo "warning: SwiftGen not installed."
-          fi
-
-        name: SwiftGen
-      - script: >-
-
-          export PATH="$PATH:/opt/homebrew/bin"
-
-          if which swiftformat >/dev/null; then
-            swiftformat .
-          else
-            echo "warning: SwiftFormat not installed."
-          fi
-
-        name: SwiftFormat
-    postCompileScripts:
-      - script: >-
-
-          export PATH="$PATH:/opt/homebrew/bin"
-
-          if which swiftlint >/dev/null; then
-            swiftlint
-          else
-            echo "warning: swiftlint not installed."
-          fi
-
-        name: SwiftLint
+      - package: Utils

@@ -12,7 +12,6 @@ import UIKit
 public class ShopAppearance: DSDesignable {
   // MARK: Lifecycle
 
-
   /// Init system appearance with brand color, or primary color of your app
   /// - Parameter primaryBrandColor: UIColor
   public init(brandColor: UIColor? = nil, title: String = "Shop") {
@@ -82,7 +81,6 @@ public class ShopAppearance: DSDesignable {
   }
 
   // MARK: Public
-
 
   // Appearance title
   public var title: String

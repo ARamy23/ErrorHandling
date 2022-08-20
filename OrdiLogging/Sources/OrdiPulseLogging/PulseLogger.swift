@@ -18,7 +18,6 @@ import UIKit
 public final class PulseLogger: LogEngine {
   // MARK: Lifecycle
 
-
   private init() {
     LoggingSystem.bootstrap(PersistentLogHandler.init)
     logger = Logger(label: Bundle.main.bundleIdentifier ?? "")

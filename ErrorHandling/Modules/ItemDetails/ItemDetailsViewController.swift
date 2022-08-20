@@ -7,6 +7,7 @@
 
 import DSKit
 import DSKitFakery
+import Utils
 
 // MARK: - ItemDetailsViewController
 
@@ -71,7 +72,7 @@ open class ItemDetailsViewController: DSViewController {
     ])
 
     // Add to cart button
-    let addToCart = DSButtonVM(title: "Buy with", icon: UIImage(named: "ApplePay")) { [unowned self] _ in
+    let addToCart = DSButtonVM(title: "Buy with", icon: UIImage(named: "ApplePay"), imagePosition: .right) { [unowned self] _ in
       self.dismiss()
     }
 
@@ -183,3 +184,24 @@ private let p2Image =
     string: "https://images.pexels.com/photos/3261069/pexels-photo-3261069.jpeg?cs=srgb&dl=pexels-wallace-chuck-3261069.jpg&fm=jpg")
 private let p3Image =
   URL(string: "https://images.pexels.com/photos/5710082/pexels-photo-5710082.jpeg?cs=srgb&dl=pexels-ox-street-5710082.jpg&fm=jpg")
+
+// MARK: - DSButtonVM + Then
+
+extension DSButtonVM {
+  /// Init button view model
+  /// - Parameters:
+  ///   - title: Button text
+  ///   - type: DSButtonVMType
+  ///   - handleDidTap: Handle did tap
+  public init(
+    title: String? = nil,
+    icon: UIImage? = nil,
+    type: DSButtonVMType = .default,
+    textAlignment: NSTextAlignment = .center,
+    imagePosition: DSButtonVMImagePosition = .left,
+    didTap handleDidTap: ((DSButtonVM) -> Void)? = nil)
+  {
+    self.init(title: title, icon: icon, type: type, textAlignment: textAlignment, didTap: handleDidTap)
+    self.imagePosition = imagePosition
+  }
+}

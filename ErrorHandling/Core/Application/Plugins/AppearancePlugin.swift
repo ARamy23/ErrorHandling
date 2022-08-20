@@ -15,7 +15,7 @@ struct AppearancePlugin { }
 // MARK: ApplicationPlugin
 
 extension AppearancePlugin: ApplicationPlugin {
-  func application(_: UIApplication, didFinishLaunchingWithOptions _: [UIApplication.LaunchOptionsKey : Any]?) -> Bool {
+  func application(_: UIApplication, didFinishLaunchingWithOptions _: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
     setup()
     return true
   }
