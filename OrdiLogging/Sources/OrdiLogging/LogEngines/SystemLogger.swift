@@ -8,24 +8,29 @@
 import Foundation
 
 public final class SystemLogger: LogEngine {
-    public static let main: SystemLogger = .init()
-    private init() {}
+  // MARK: Lifecycle
 
-    public func info(message: String) {
-        #if DEBUG
-            print(message.withPrefix("ℹ️ "))
-        #endif
-    }
+  private init() { }
 
-    public func warn(message: String) {
-        #if DEBUG
-            print(message.withPrefix("⚠️ "))
-        #endif
-    }
+  // MARK: Public
 
-    public func error(message: String) {
-        #if DEBUG
-            print(message.withPrefix("🚨 "))
-        #endif
-    }
+  public static let main: SystemLogger = .init()
+
+  public func info(message: String) {
+    #if DEBUG
+    print(message.withPrefix("ℹ️ "))
+    #endif
+  }
+
+  public func warn(message: String) {
+    #if DEBUG
+    print(message.withPrefix("⚠️ "))
+    #endif
+  }
+
+  public func error(message: String) {
+    #if DEBUG
+    print(message.withPrefix("🚨 "))
+    #endif
+  }
 }

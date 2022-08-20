@@ -6,47 +6,56 @@
 //  Copyright © 2021 Ahmed Ramy. All rights reserved.
 //
 
+import Foundation
+import Logging
+import OrdiLogging
 import Pulse
 import PulseUI
-import Logging
-import Foundation
-import OrdiLogging
 import UIKit
-import PulseUI
+
+// MARK: - PulseLogger
 
 public final class PulseLogger: LogEngine {
-    public static let main: PulseLogger = .init()
+  // MARK: Lifecycle
 
-    private let logger: Logger
-    
-    private init() {
-        LoggingSystem.bootstrap(PersistentLogHandler.init)
-        logger = Logger(label: Bundle.main.bundleIdentifier ?? "")
-    }
 
-    public func info(message: String) {
-        #if DEBUG
-            logger.info(Logger.Message(stringLiteral: message))
-        #endif
-    }
+  private init() {
+    LoggingSystem.bootstrap(PersistentLogHandler.init)
+    logger = Logger(label: Bundle.main.bundleIdentifier ?? "")
+  }
 
-    public func warn(message: String) {
-        #if DEBUG
-            logger.warning(Logger.Message(stringLiteral: message))
-        #endif
-    }
+  // MARK: Public
 
-    public func error(message: String) {
-        #if DEBUG
-            logger.error(Logger.Message(stringLiteral: message))
-        #endif
-    }
+  public static let main: PulseLogger = .init()
+
+  public func info(message: String) {
+    #if DEBUG
+    logger.info(Logger.Message(stringLiteral: message))
+    #endif
+  }
+
+  public func warn(message: String) {
+    #if DEBUG
+    logger.warning(Logger.Message(stringLiteral: message))
+    #endif
+  }
+
+  public func error(message: String) {
+    #if DEBUG
+    logger.error(Logger.Message(stringLiteral: message))
+    #endif
+  }
+
+  // MARK: Private
+
+  private let logger: Logger
 }
 
-public extension UIWindow {
-    static var showPulseUI: () -> Void = { }
-    override func motionEnded(_ motion: UIEvent.EventSubtype, with event: UIEvent?) {
-        guard motion == .motionShake else { return }
-        Self.showPulseUI()
-    }
+extension UIWindow {
+  public static var showPulseUI: () -> Void = { }
+
+  public override func motionEnded(_ motion: UIEvent.EventSubtype, with _: UIEvent?) {
+    guard motion == .motionShake else { return }
+    Self.showPulseUI()
+  }
 }

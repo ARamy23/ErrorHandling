@@ -89,6 +89,9 @@ targets:
         product: OrdiPulseLogging
     preBuildScripts:
       - script: >-
+
+          export PATH="$PATH:/opt/homebrew/bin"
+
           if which swiftgen >/dev/null; then
             swiftgen
           else
@@ -97,6 +100,9 @@ targets:
 
         name: SwiftGen
       - script: >-
+
+          export PATH="$PATH:/opt/homebrew/bin"
+
           if which swiftformat >/dev/null; then
             swiftformat .
           else
@@ -106,6 +112,9 @@ targets:
         name: SwiftFormat
     postCompileScripts:
       - script: >-
+
+          export PATH="$PATH:/opt/homebrew/bin"
+
           if which swiftlint >/dev/null; then
             swiftlint
           else

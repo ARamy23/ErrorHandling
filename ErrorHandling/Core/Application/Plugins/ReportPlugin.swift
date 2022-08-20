@@ -7,20 +7,24 @@
 
 import Foundation
 import OrdiLogging
-import UIKit
 import OrdiPulseLogging
+import UIKit
+
+// MARK: - ReportPlugin
 
 struct ReportPlugin { }
 
+// MARK: ApplicationPlugin
+
 extension ReportPlugin: ApplicationPlugin {
-  func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]?) -> Bool {
+  func application(_: UIApplication, didFinishLaunchingWithOptions _: [UIApplication.LaunchOptionsKey : Any]?) -> Bool {
     setup()
     return true
   }
 }
 
-private extension ReportPlugin {
-  func setup() {
+extension ReportPlugin {
+  private func setup() {
     LoggersManager.engines.append(PulseLogger.main)
     LoggersManager.info(message: "Loggers woke up!")
   }

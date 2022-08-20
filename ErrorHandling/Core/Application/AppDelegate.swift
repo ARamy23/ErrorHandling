@@ -11,7 +11,8 @@ import UIKit
 class AppDelegate: ApplicationPluggableDelegate {
   override func plugins() -> [ApplicationPlugin] {
     [
-      ReportPlugin()
+      ReportPlugin(),
+      AppearancePlugin(),
     ]
   }
 }
