@@ -23,8 +23,12 @@ public class BlackToneAppearance: DSDesignable {
     // MARK: - Primary view
 
     // Text colors
-    let text = DSDesignableTextColor.textColors(main: UIColor(0x484848), secondary: UIColor(0x767676))
-    let button = DSDesignableButtonColor(background: UIColor(0x222222), title: UIColor(0xffffff))
+    let text = DSDesignableTextColor.textColors(
+      main: DSColor.color(light: UIColor(0x484848), dark: UIColor(0xFFFFFF)),
+      secondary: DSColor.color(light: UIColor(0x767676), dark: UIColor(0xAAAAAA)))
+    let button = DSDesignableButtonColor(
+      background: DSColor.color(light: UIColor(0x222222), dark: UIColor(0xF9F9F9)),
+      title: DSColor.color(light: UIColor(0xF9F9F9), dark: UIColor(0x222222)))
 
     // Text field
     let primaryViewTextField = DSDesignableTextFieldColor(
@@ -38,7 +42,7 @@ public class BlackToneAppearance: DSDesignable {
       button: button,
       text: text,
       textField: primaryViewTextField,
-      background: UIColor(0xFFFFFF),
+      background: DSColor.color(light: UIColor(0xFFFFFF), dark: UIColor(0x000000)),
       separator: UIColor(0xD5C5B2),
       cornerRadius: 8)
 
