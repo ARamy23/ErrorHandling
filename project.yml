@@ -1,0 +1,104 @@
+name: ErrorHandling
+options:
+  indentWidth: 2
+  tabWidth: 2
+  bundleIdPrefix: com
+configs:
+  Debug: debug
+  Release: release
+  Alpha: release
+  Beta: release
+packages:
+  DSKit:
+    url: https://github.com/imodeveloperlab/dskit
+    branch: development
+settings:
+  DEVELOPMENT_TEAM: Ahmed Ramy
+targets:
+  ErrorHandling:
+    type: application
+    platform: iOS
+    deploymentTarget: 15.0
+    sources: [ErrorHandling]
+    settings:
+      base:
+        MARKETING_VERSION: 0.0.0
+        CURRENT_PROJECT_VERSION: 1
+        DEVELOPMENT_TEAM: 969Y6REAB6
+        OTHER_LDFLAGS: -Xlinker -interposable
+        INFOPLIST_FILE: ErrorHandling/Common/Supporting Files/Info.plist
+      configs:
+        Debug:
+          BUNDLE_DISPLAY_NAME: "ErrorHandling Dev"
+          PRODUCT_BUNDLE_IDENTIFIER: com.aramy23.ErrorHandling.dev
+          SWIFT_ACTIVE_COMPILATION_CONDITIONS: DEBUG
+          GCC_PREPROCESSOR_DEFINITIONS: DEBUG=1 $(inherited)
+        Alpha:
+          BUNDLE_DISPLAY_NAME: "ErrorHandling Staging"
+          PRODUCT_BUNDLE_IDENTIFIER: com.aramy23.ErrorHandling.staging
+          SWIFT_ACTIVE_COMPILATION_CONDITIONS: STAGING
+          GCC_PREPROCESSOR_DEFINITIONS: STAGING=1 $(inherited)
+        Beta:
+          BUNDLE_DISPLAY_NAME: "ErrorHandling Beta"
+          PRODUCT_BUNDLE_IDENTIFIER: com.aramy23.ErrorHandling.beta
+          SWIFT_ACTIVE_COMPILATION_CONDITIONS: BETA
+          GCC_PREPROCESSOR_DEFINITIONS: BETA=1 $(inherited)
+        Release:
+          BUNDLE_DISPLAY_NAME: "ErrorHandling"
+          PRODUCT_BUNDLE_IDENTIFIER: com.aramy23.ErrorHandling
+          SWIFT_ACTIVE_COMPILATION_CONDITIONS: PROD
+          GCC_PREPROCESSOR_DEFINITIONS: PROD=1 $(inherited)
+    info:
+      path: "./ErrorHandling/Common/Supporting Files/Info.plist"
+      properties:
+        CFBundleDisplayName: $(BUNDLE_DISPLAY_NAME)
+        CFBundleShortVersionString: "$(MARKETING_VERSION)"
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+        CFBundlePackageType: $(PRODUCT_BUNDLE_PACKAGE_TYPE)
+        UISupportedInterfaceOrientations:
+          - UIInterfaceOrientationPortrait
+          - UIInterfaceOrientationLandscapeLeft
+          - UIInterfaceOrientationLandscapeRight
+        UISupportedInterfaceOrientations~ipad:
+          - UIInterfaceOrientationPortrait
+          - UIInterfaceOrientationPortraitUpsideDown
+          - UIInterfaceOrientationLandscapeLeft
+          - UIInterfaceOrientationLandscapeRight
+        UIRequiredDeviceCapabilities:
+          - armv7
+        UILaunchStoryboardName: LaunchScreen
+        LSRequiresIPhoneOS: true
+        UIApplicationSceneManifest:
+          UIApplicationSupportsMultipleScenes: false
+          UISceneConfigurations:
+            UIWindowSceneSessionRoleApplication:
+              - UISceneConfigurationName: Default Configuration
+                UISceneDelegateClassName: $(PRODUCT_MODULE_NAME).SceneDelegate
+    dependencies:
+      - package: DSKit
+    preBuildScripts:
+      - script: >-
+          if which swiftgen >/dev/null; then
+            swiftgen
+          else
+            echo "warning: SwiftGen not installed."
+          fi
+
+        name: SwiftGen
+      - script: >-
+          if which swiftformat >/dev/null; then
+            swiftformat .
+          else
+            echo "warning: SwiftFormat not installed."
+          fi
+
+        name: SwiftFormat
+    postCompileScripts:
+      - script: >-
+          if which swiftlint >/dev/null; then
+            swiftlint
+          else
+            echo "warning: swiftlint not installed."
+          fi
+
+        name: SwiftLint
