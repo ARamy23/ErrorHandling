@@ -5,6 +5,7 @@
 //  Created by Ahmed Ramy on 02/08/2022.
 //
 
+import Inject
 import UIKit
 
 // MARK: - SceneDelegate
@@ -23,7 +24,7 @@ extension SceneDelegate {
     window = UIWindow(windowScene: scene)
     defer { window?.makeKeyAndVisible() }
     set(
-      rootViewTo: UINavigationController(rootViewController: ItemDetailsViewController()))
+      rootViewTo: UINavigationController(rootViewController: Inject.ViewControllerHost(LogInViewController())))
   }
 }
 

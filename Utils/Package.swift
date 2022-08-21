@@ -26,7 +26,4 @@ let package = Package(
       dependencies: [
         "OrdiLogging",
       ]),
-    .testTarget(
-      name: "UtilsTests",
-      dependencies: ["Utils"]),
   ])
