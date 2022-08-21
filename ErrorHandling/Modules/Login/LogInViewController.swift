@@ -21,17 +21,27 @@ open class LogInViewController: BaseViewController {
 
   open override func viewDidLoad() {
     super.viewDidLoad()
+    bind()
     showContent()
     showBottomContent()
+  }
+
+  // MARK: Private
+
+  private let viewModel: LoginViewModel = .init()
+  private var cancellables = Set<AnyCancellable>()
+}
+
+extension LogInViewController {
+  private func bind() {
     viewModel.$state.sink { [weak self] state in
       self?.handle(error: state.error)
+      self?.handle(success: state.message)
     }.store(in: &cancellables)
   }
 
-  // MARK: Internal
-
   // Show content
-  func showContent() {
+  private func showContent() {
     // Text
     let space1 = DSSpaceVM(type: .custom(50))
     let composer = DSTextComposer(alignment: .center)
@@ -55,7 +65,7 @@ open class LogInViewController: BaseViewController {
   }
 
   // Show bottom content
-  func showBottomContent() {
+  private func showBottomContent() {
     let emailLabel = DSLabelVM(
       .subheadline,
       text: "or sign up with Email",
@@ -100,11 +110,6 @@ open class LogInViewController: BaseViewController {
       [logInWithEmail].list(),
     ])
   }
-
-  // MARK: Private
-
-  private let viewModel: LoginViewModel = .init()
-  private var cancellables = Set<AnyCancellable>()
 }
 
 // MARK: - SwiftUI Preview

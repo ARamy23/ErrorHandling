@@ -40,8 +40,8 @@ class AppleSignInViewModel {
   @Published var state: State = .idle
 
   func attemptSignIn() {
-    let request = [ASAuthorizationAppleIDProvider().createRequest().then { $0.requestedScopes = [.fullName] }]
-    let authController = ASAuthorizationController(authorizationRequests: request)
+    let request = ASAuthorizationAppleIDProvider().createRequest().then { $0.requestedScopes = [.fullName] }
+    let authController = ASAuthorizationController(authorizationRequests: [request])
     authController.delegate = uiDelegate
     authController.performRequests()
   }
@@ -54,7 +54,7 @@ class AppleSignInViewModel {
 
   private lazy var onSuccessHandler: VoidCallback = { [weak self] in
     guard let self = self else { return }
-    self.state = .success
+    self.state = .success(SuccessMessage(title: "Authenticated!"))
   }
 
   private lazy var onErrorHandler: Callback<ASAuthorizationError> = { [weak self] error in
@@ -67,7 +67,7 @@ class AppleSignInViewModel {
 extension AppleSignInViewModel {
   enum State {
     case idle
-    case success
+    case success(SuccessMessage)
     case failure(AppleSignInError)
   }
 }

@@ -35,6 +35,7 @@ public class LoginViewModel {
 extension LoginViewModel {
   struct State {
     var error: PresentationError?
+    var message: SuccessMessage?
   }
 }
 
@@ -44,6 +45,8 @@ extension LoginViewModel {
       switch state {
       case .failure(let error):
         self.state.error = error
+      case .success(let message):
+        self.state.message = message
       default:
         // TODO: - Later
         break

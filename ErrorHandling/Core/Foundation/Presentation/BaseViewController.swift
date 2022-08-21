@@ -18,4 +18,9 @@ open class BaseViewController: DSViewController {
       SPIndicator.present(title: error.title, message: error.description, preset: .error, haptic: .error, from: .top)
     }
   }
+
+  open func handle(success: SuccessMessage?) {
+    guard let success = success else { return }
+    SPIndicator.present(title: success.title, message: success.description, preset: .done, haptic: .success, from: .bottom)
+  }
 }
