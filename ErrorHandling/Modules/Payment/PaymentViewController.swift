@@ -37,10 +37,8 @@ extension PaymentViewController {
       self.update()
     }.store(in: &cancellables)
   }
-}
 
-extension PaymentViewController {
-  func paymentMethodsSection() -> DSSection {
+  private func paymentMethodsSection() -> DSSection {
     viewModel
       .state
       .paymentMethods.map { paymentMethod($0) }
@@ -48,14 +46,7 @@ extension PaymentViewController {
       .headlineHeader("Select your preferred payment method.", size: 16)
   }
 
-  /// Payment method
-  /// - Parameters:
-  ///   - holder: String
-  ///   - type: String
-  ///   - expire: String
-  ///   - end: String
-  /// - Returns: DSViewModel
-  func paymentMethod(_ method: PaymentViewModel.PaymentMethodUIModel) -> DSViewModel {
+  private func paymentMethod(_ method: PaymentViewModel.PaymentMethodUIModel) -> DSViewModel {
     // Text
     let composer = DSTextComposer()
     composer.add(type: .headlineWithSize(15), text: method.title)
@@ -82,7 +73,7 @@ extension PaymentViewController {
 
   /// Bottom content section
   /// - Returns: DSSection
-  func bottomContentSection() -> DSSection {
+  private func bottomContentSection() -> DSSection {
     let icon = DSSFSymbolConfig.buttonIcon("arrow.right")
     var button = DSButtonVM(title: "Authorize Purchase", icon: icon) { [unowned self] _ in
       self.pop()
@@ -96,7 +87,7 @@ extension PaymentViewController {
 
   /// Add new payment method section
   /// - Returns: DSSection
-  func addNewPaymentMethodSection() -> DSSection {
+  private func addNewPaymentMethodSection() -> DSSection {
     let icon = DSSFSymbolConfig.buttonIcon("plus.circle")
     let button = DSButtonVM(title: "Add New Payment Method", icon: icon, type: .secondaryView) { [unowned self] _ in
       self.pop()

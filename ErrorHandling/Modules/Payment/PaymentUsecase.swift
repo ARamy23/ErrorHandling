@@ -6,3 +6,9 @@
 //
 
 import Foundation
+
+final class PaymentUsecase: Usecase<String> {
+  override func process() async throws -> String {
+    "Placeholder for now"
+  }
+}
