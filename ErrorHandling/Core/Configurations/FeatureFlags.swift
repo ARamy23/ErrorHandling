@@ -17,6 +17,6 @@ protocol FeatureFlagsProtocol {
 // MARK: - FeatureFlags
 
 struct FeatureFlags: FeatureFlagsProtocol {
-  let applePay = false
-  let wallet = false
+  let applePay = true
+  let wallet = true
 }

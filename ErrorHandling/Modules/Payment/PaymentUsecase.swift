@@ -15,11 +15,13 @@ final class PaymentUsecase: Usecase<[PaymentMethod]> {
   init(
     walletRepository: WalletRepositoryProtocol = WalletRepository(),
     cardsRepository: PaymentCardsRepositoryProtocol = PaymentCardsRepository(),
-    applePay: ApplePayProtocol = ApplePay())
+    applePay: ApplePayProtocol = ApplePay(),
+    flags: FeatureFlagsProtocol = FeatureFlags())
   {
     self.walletRepository = walletRepository
     self.cardsRepository = cardsRepository
     self.applePay = applePay
+    self.flags = flags
   }
 
   // MARK: Internal
@@ -27,26 +29,25 @@ final class PaymentUsecase: Usecase<[PaymentMethod]> {
   let walletRepository: WalletRepositoryProtocol
   let cardsRepository: PaymentCardsRepositoryProtocol
   let applePay: ApplePayProtocol
+  let flags: FeatureFlagsProtocol
 
   override func process() async throws -> [PaymentMethod] {
-    var methods: [PaymentMethod] = []
+    var methods: [PaymentMethod] = [].appending(elements: try await cardsRepository.fetchCards())
 
-    methods.append(contentsOf: try await cardsRepository.fetchCards())
-
-    do {
-      methods.append(try await walletRepository.fetchWallet())
-    } catch let error as NoWalletFoundError {
-      LoggersManager.error(error)
-    } catch let error as BannedWalletError {
-      LoggersManager.error(error)
-    } catch let error as WalletInReviewError {
-      LoggersManager.error(error)
-    } catch {
-      LoggersManager.error(message: "Unhandlable error caught: \(error)")
+    if flags.wallet {
+      do {
+        methods.append(try await walletRepository.fetchWallet())
+      } catch let error as NoWalletFoundError {
+        LoggersManager.error(error)
+      } catch let error as BannedWalletError {
+        LoggersManager.error(error)
+      } catch let error as WalletInReviewError {
+        LoggersManager.error(error)
+      } catch {
+        LoggersManager.error(message: "Unhandlable error caught: \(error)")
+      }
     }
 
-    methods.append(applePay)
-
-    return methods
+    return methods.appending(applePay, if: flags.applePay)
   }
 }

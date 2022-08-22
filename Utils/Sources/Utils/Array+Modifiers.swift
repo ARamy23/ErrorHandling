@@ -38,6 +38,20 @@ extension Array {
     current.append(contentsOf: elements)
     return current
   }
+
+  public func appending(_ elements: Element, if condition: Bool) -> Self {
+    guard condition else { return self }
+    var current = self
+    current.append(elements)
+    return current
+  }
+
+  public func appending(elements: [Element], if condition: Bool) -> Self {
+    guard condition else { return self }
+    var current = self
+    current.append(contentsOf: elements)
+    return current
+  }
 }
 
 extension Sequence {
