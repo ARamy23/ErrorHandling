@@ -12,14 +12,25 @@ import PassKit
 
 protocol ApplePayProtocol {
   var status: ApplePay.Status { get }
+  var supportedNetworks: [PKPaymentNetwork] { get }
 }
 
 // MARK: - ApplePay
 
 struct ApplePay: ApplePayProtocol {
-  private(set) var status: Status {
-    .unavailable
+  var status: Status {
+    let isServiceAvailable = PKPaymentAuthorizationController.canMakePayments()
+    let isItSetup = PKPaymentAuthorizationController.canMakePayments(usingNetworks: supportedNetworks)
+
+    return isServiceAvailable ? (isItSetup ? .available : .needsSetup) : .unavailable
   }
+
+  // NOTE: It would be better to fetch this from a configuration
+  let supportedNetworks: [PKPaymentNetwork] = [
+    .visa,
+    .masterCard,
+    .amex,
+  ]
 }
 
 extension ApplePay {
