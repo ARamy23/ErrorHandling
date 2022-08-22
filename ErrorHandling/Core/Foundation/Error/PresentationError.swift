@@ -10,7 +10,7 @@ import UIKit.UIImage
 
 // MARK: - PresentationError
 
-public protocol PresentationError {
+public protocol PresentationError: BaseError {
   var title: String { get }
   var description: String? { get }
   var icon: UIImage? { get }
