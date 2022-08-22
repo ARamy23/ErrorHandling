@@ -11,10 +11,25 @@ import Utils
 // MARK: - AppleSignInViewModel
 
 public class AppleSignInViewModel {
-  // MARK: Internal
+  // MARK: Lifecycle
+
+  public init() { }
+
+  public init(uiDelegate: AppleAuthUIDelegateProtocol) {
+    self.uiDelegate = uiDelegate
+  }
+
+  // MARK: Public
 
   @Published public var state: State = .idle
-  
+
+  public func attemptSignIn() {
+    let request = ASAuthorizationAppleIDProvider().createRequest().then { $0.requestedScopes = [.fullName] }
+    let authController = ASAuthorizationController(authorizationRequests: [request])
+    authController.delegate = uiDelegate
+    authController.performRequests()
+  }
+
   // MARK: Private
 
   private lazy var uiDelegate: AppleAuthUIDelegateProtocol = AppleAuthUIDelegate(
@@ -30,21 +45,6 @@ public class AppleSignInViewModel {
     guard let self = self else { return }
     guard error.code != .canceled else { return }
     self.state = .failure(.init(error))
-  }
-  
-  // MARK: Lifecycle
-
-  public init() { }
-
-  public init(uiDelegate: AppleAuthUIDelegateProtocol) {
-    self.uiDelegate = uiDelegate
-  }
-
-  public func attemptSignIn() {
-    let request = ASAuthorizationAppleIDProvider().createRequest().then { $0.requestedScopes = [.fullName] }
-    let authController = ASAuthorizationController(authorizationRequests: [request])
-    authController.delegate = uiDelegate
-    authController.performRequests()
   }
 }
 
@@ -66,13 +66,17 @@ public protocol AppleAuthUIDelegateProtocol: ASAuthorizationControllerDelegate {
 // MARK: - AppleAuthUIDelegate
 
 public final class AppleAuthUIDelegate: NSObject, AppleAuthUIDelegateProtocol {
-  public var onSuccess: VoidCallback
-  public var onError: Callback<ASAuthorizationError>
+  // MARK: Lifecycle
 
   public init(onSuccess: @escaping VoidCallback, onError: @escaping Callback<ASAuthorizationError>) {
     self.onSuccess = onSuccess
     self.onError = onError
   }
+
+  // MARK: Public
+
+  public var onSuccess: VoidCallback
+  public var onError: Callback<ASAuthorizationError>
 
   public func authorizationController(controller _: ASAuthorizationController, didCompleteWithAuthorization _: ASAuthorization) {
     onSuccess()
