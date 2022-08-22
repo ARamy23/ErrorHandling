@@ -8,3 +8,11 @@ Repository made to describe Error Handling topic on [Ramy's Blog](https://blog.a
 4. Error Flow
 5. Error Handlers
 6. Error Monitoring
+
+## Installation
+
+> You may notice the project doesn't compile & lots of red files (where the heck is the project?)
+> You need to install Xcodegen & SwiftGen for it to generate the project and allow you to build
+
+So, please run this if you want to run it
+`brew install xcodegen swiftgen && xcodegen generate && swiftgen && xed .`
