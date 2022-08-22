@@ -18,6 +18,7 @@ class PaymentViewController: BaseViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
     title = "Payment"
+    viewModel.viewDidLoad()
     update()
     bind()
   }
@@ -30,7 +31,7 @@ class PaymentViewController: BaseViewController {
 
 extension PaymentViewController {
   private func bind() {
-    viewModel.$state.sink { [weak self] state in
+    viewModel.$state.receive(on: DispatchQueue.main).sink { [weak self] state in
       guard let self = self else { return }
       self.handle(error: state.error)
       self.handle(success: state.message)
@@ -56,7 +57,7 @@ extension PaymentViewController {
     }
 
     // Action
-    var action = composer.checkboxActionViewModel(selected: method.isSelected)
+    var action = composer.checkboxActionViewModel(selected: viewModel.isSelected(method))
 
     // Icon
     let icon = method.icon.image
@@ -64,7 +65,7 @@ extension PaymentViewController {
 
     // Handle did tap
     action.didTap { [unowned self] (_: DSActionVM) in
-      self.viewModel.addNewPaymentMethod()
+      self.viewModel.didSelect(method)
       self.update()
     }
 

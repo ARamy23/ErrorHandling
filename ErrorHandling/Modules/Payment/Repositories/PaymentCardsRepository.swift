@@ -18,9 +18,9 @@ protocol PaymentCardsRepositoryProtocol {
 class PaymentCardsRepository: PaymentCardsRepositoryProtocol {
   func fetchCards() async throws -> [PaymentCard] {
     [
-      .init(last4Digits: "4242", expiryDate: "01/25", holderName: "John Doe"),
-      .init(last4Digits: "1234", expiryDate: "02/24", holderName: "Doe John"),
-      .init(last4Digits: "9876", expiryDate: "03/23", holderName: "Some Doe"),
+      .init(last4Digits: "4242", expiryDate: "01/25", holderName: "John Doe", type: .visa),
+      .init(last4Digits: "1234", expiryDate: "02/24", holderName: "Doe John", type: .amex),
+      .init(last4Digits: "9876", expiryDate: "03/23", holderName: "Some Doe", type: .masterCard),
     ]
   }
 }
