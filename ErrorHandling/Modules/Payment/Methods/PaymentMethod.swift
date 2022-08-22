@@ -7,4 +7,4 @@
 
 import Foundation
 
-protocol PaymentMethod: Identifiable { }
+protocol PaymentMethod { }
