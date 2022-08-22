@@ -7,6 +7,16 @@
 
 import Foundation
 
+// MARK: - PaymentCardsRepositoryProtocol
+
 protocol PaymentCardsRepositoryProtocol {
   func fetchCards() async throws -> String
+}
+
+// MARK: - PaymentCardsRepository
+
+class PaymentCardsRepository: PaymentCardsRepositoryProtocol {
+  func fetchCards() async throws -> String {
+    "Cardzzz"
+  }
 }
