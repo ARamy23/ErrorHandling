@@ -10,7 +10,7 @@ import PassKit
 
 // MARK: - ApplePayProtocol
 
-protocol ApplePayProtocol {
+protocol ApplePayProtocol: PaymentMethod {
   var status: ApplePay.Status { get }
   var supportedNetworks: [PKPaymentNetwork] { get }
 }
@@ -18,6 +18,8 @@ protocol ApplePayProtocol {
 // MARK: - ApplePay
 
 struct ApplePay: ApplePayProtocol {
+  let id: UUID = .init()
+
   var status: Status {
     let isServiceAvailable = PKPaymentAuthorizationController.canMakePayments()
     let isItSetup = PKPaymentAuthorizationController.canMakePayments(usingNetworks: supportedNetworks)

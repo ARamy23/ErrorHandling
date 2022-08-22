@@ -10,14 +10,18 @@ import Foundation
 // MARK: - WalletRepositoryProtocol
 
 protocol WalletRepositoryProtocol {
-  func fetchWallet() async throws -> String
+  func fetchWallet() async throws -> Wallet
 }
 
 // MARK: - WalletRepository
 
 class WalletRepository: WalletRepositoryProtocol {
-  func fetchWallet() async throws -> String {
-    if Bool.random() { return "Found your wallet" } else { throw NoWalletFoundError() }
+  func fetchWallet() async throws -> Wallet {
+    if Bool.random() {
+      return Wallet(balance: .init(value: Bool.random() ? 425.0 : 0.0))
+    } else {
+      throw NoWalletFoundError()
+    }
   }
 }
 

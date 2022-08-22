@@ -10,13 +10,17 @@ import Foundation
 // MARK: - PaymentCardsRepositoryProtocol
 
 protocol PaymentCardsRepositoryProtocol {
-  func fetchCards() async throws -> String
+  func fetchCards() async throws -> [PaymentCard]
 }
 
 // MARK: - PaymentCardsRepository
 
 class PaymentCardsRepository: PaymentCardsRepositoryProtocol {
-  func fetchCards() async throws -> String {
-    "Cardzzz"
+  func fetchCards() async throws -> [PaymentCard] {
+    [
+      .init(last4Digits: "4242", expiryDate: "01/25", holderName: "John Doe"),
+      .init(last4Digits: "1234", expiryDate: "02/24", holderName: "Doe John"),
+      .init(last4Digits: "9876", expiryDate: "03/23", holderName: "Some Doe"),
+    ]
   }
 }
