@@ -42,7 +42,7 @@ extension PaymentViewController {
   private func paymentMethodsSection() -> DSSection {
     viewModel
       .state
-      .paymentMethods.map { paymentMethod($0) }
+      .allMethods.map { paymentMethod($0) }
       .list()
       .headlineHeader("Select your preferred payment method.", size: 16)
   }

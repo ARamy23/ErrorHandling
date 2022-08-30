@@ -21,22 +21,17 @@ class WalletRepository: WalletRepositoryProtocol {
       return Wallet(balance: .init(value: Bool.random() ? 425.0 : 0.0))
     } else {
       throw [
-        NoWalletFoundError(),
-        BannedWalletError(),
-        WalletInReviewError(),
+        RepositoryError.noWalletFound,
+        RepositoryError.bannedWallet,
+        RepositoryError.walletInReview,
       ][Int.random(in: 0...2)]
     }
   }
 }
 
 // MARK: - NoWalletFoundError
-
-struct NoWalletFoundError: PaymentMethodRepositoryError { }
-
-// MARK: - BannedWalletError
-
-struct BannedWalletError: PaymentMethodRepositoryError { }
-
-// MARK: - WalletInReviewError
-
-struct WalletInReviewError: PaymentMethodRepositoryError { }
+extension RepositoryError {
+  static let noWalletFound: RepositoryError = .init()
+  static let bannedWallet: RepositoryError = .init()
+  static let walletInReview: RepositoryError = .init()
+}

@@ -31,23 +31,54 @@ final class PaymentUsecase: Usecase<[PaymentMethod]> {
   let applePay: ApplePayProtocol
   let flags: FeatureFlagsProtocol
 
-  override func process() async throws -> [PaymentMethod] {
-    var methods: [PaymentMethod] = [].appending(elements: try await cardsRepository.fetchCards())
-
+  fileprivate func addWalletIfPossible(_ methods: inout [PaymentMethod]) async {
     if flags.wallet {
       do {
         methods.append(try await walletRepository.fetchWallet())
-      } catch let error as NoWalletFoundError {
-        LoggersManager.error(error)
-      } catch let error as BannedWalletError {
-        LoggersManager.error(error)
-      } catch let error as WalletInReviewError {
+      } catch let error as NetworkError {
         LoggersManager.error(error)
       } catch {
-        LoggersManager.error(message: "Unhandlable error caught: \(error)")
+        LoggersManager.error(message: "Unknown error caught: \(error)")
       }
     }
-
-    return methods.appending(applePay, if: flags.applePay)
   }
+  
+  override func process() async throws -> [PaymentMethod] {
+    var methods: [PaymentMethod] = []
+    
+    await addWalletIfPossible(to: &methods)
+    await addPaymentCardsIfPossible(to: &methods)
+    await addApplePayIfPossible(to: &methods)
+    
+    return methods
+  }
+}
+
+private extension PaymentUsecase {
+    func addApplePayIfPossible(to methods: inout [PaymentMethod]) async {
+      guard flags.applePay && applePay.status.isUsable else { return }
+      methods.append(applePay)
+    }
+    
+    func addPaymentCardsIfPossible(to methods: inout [PaymentMethod]) async {
+        do {
+          methods.append(contentsOf: try await cardsRepository.fetchCards())
+        } catch {
+            LoggersManager.error(message: "\(error)")
+        }
+    }
+    
+    func addWalletIfPossible(to methods: inout [PaymentMethod]) async {
+      guard flags.wallet else { return }
+      do {
+        let wallet = try await walletRepository.fetchWallet()
+        if wallet.balance.value != 0 {
+          methods.append(wallet)
+        } else {
+          LoggersManager.info(message: "Wallet was found empty, so wasn't added to payment options")
+        }
+      } catch {
+        LoggersManager.error(message: "\(error)")
+      }
+    }
 }

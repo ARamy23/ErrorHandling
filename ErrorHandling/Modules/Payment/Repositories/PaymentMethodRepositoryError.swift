@@ -7,4 +7,3 @@
 
 import Foundation
 
-protocol PaymentMethodRepositoryError: RepositoryError { }

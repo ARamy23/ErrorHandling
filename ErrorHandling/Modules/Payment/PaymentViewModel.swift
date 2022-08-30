@@ -14,7 +14,23 @@ class PaymentViewModel {
 
   func viewDidLoad() {
     Task {
-      state.paymentMethods = try await PaymentUsecase().execute().map { PaymentMethodUIModel($0) }
+      let response = try await PaymentUsecase().execute()
+      state.allMethods = response.map { PaymentMethodUIModel($0) }
+      
+      state.wallet = response.compactMap {
+        guard let wallet = $0 as? Wallet else { return nil }
+        return PaymentMethodUIModel(wallet)
+      }.first
+      
+      state.paymentCards = response.compactMap {
+        guard let card = $0 as? PaymentCard else { return nil }
+        return PaymentMethodUIModel(card)
+      }
+      
+      state.applePay = response.compactMap {
+        guard let applePay = $0 as? ApplePayProtocol else { return nil }
+        return PaymentMethodUIModel(applePay)
+      }.first
     }
   }
 
@@ -32,8 +48,12 @@ class PaymentViewModel {
 
 extension PaymentViewModel {
   struct State {
-    var paymentMethods: [PaymentMethodUIModel] = []
+    var wallet: PaymentMethodUIModel?
+    var paymentCards: [PaymentMethodUIModel] = []
+    var applePay: PaymentMethodUIModel?
+    var allMethods: [PaymentMethodUIModel] = []
     var selectedPaymentMethod: PaymentMethodUIModel?
+    
     var error: PresentationError?
     var message: SuccessMessage?
   }

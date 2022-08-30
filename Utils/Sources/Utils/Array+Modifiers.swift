@@ -27,29 +27,31 @@ extension Array where Element: Identifiable {
 }
 
 extension Array {
-  public func appending(_ elements: Element) -> Self {
-    var current = self
-    current.append(elements)
-    return current
-  }
-
-  public func appending(elements: [Element]) -> Self {
-    var current = self
-    current.append(contentsOf: elements)
-    return current
-  }
-
-  public func appending(_ elements: Element, if condition: Bool) -> Self {
+  public func appending(_ element: Element, if condition: Bool = true) -> Self {
     guard condition else { return self }
     var current = self
-    current.append(elements)
+    current.append(element)
     return current
   }
 
-  public func appending(elements: [Element], if condition: Bool) -> Self {
+  public func appending(elements: [Element], if condition: Bool = true) -> Self {
     guard condition else { return self }
     var current = self
     current.append(contentsOf: elements)
+    return current
+  }
+    
+  public func appending(_ element: () async throws -> (Element), if condition: Bool = true) async rethrows -> Self {
+    guard condition else { return self }
+    var current = self
+    current.append(try await element())
+    return current
+  }
+  
+  public func appending(elements: () async throws -> ([Element]), if condition: Bool = true) async rethrows -> Self {
+    guard condition else { return self }
+    var current = self
+    current.append(contentsOf: try await elements())
     return current
   }
 }
