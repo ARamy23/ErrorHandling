@@ -7,20 +7,24 @@
 
 import Foundation
 
+// MARK: - WalletEndpoint
+
 enum WalletEndpoint {
-    case fetch
+  case fetch
 }
 
+// MARK: Endpoint
+
 extension WalletEndpoint: Endpoint {
-    var path: String {
-        "wallet-profile"
-    }
-    
-    var parameters: HTTPParameters {
-        [:]
-    }
-    
-    var method: HTTPMethod {
-        .GET
-    }
+  var path: String {
+    "wallet-profile"
+  }
+
+  var parameters: HTTPParameters {
+    [:]
+  }
+
+  var method: HTTPMethod {
+    .GET
+  }
 }

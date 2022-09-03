@@ -11,6 +11,7 @@ import PassKit
 // MARK: - ApplePayProtocol
 
 protocol ApplePayProtocol: PaymentMethod {
+  var id: UUID { get }
   var status: ApplePay.Status { get }
   var supportedNetworks: [PKPaymentNetwork] { get }
 }
@@ -43,4 +44,19 @@ extension ApplePay {
 
     var isUsable: Bool { self != .unavailable }
   }
+}
+
+// MARK: - FakeApplePay
+
+struct FakeApplePay: ApplePayProtocol {
+  let id: UUID = .init()
+
+  var status: ApplePay.Status { .needsSetup }
+
+  // NOTE: It would be better to fetch this from a configuration
+  let supportedNetworks: [PKPaymentNetwork] = [
+    .visa,
+    .masterCard,
+    .amex,
+  ]
 }

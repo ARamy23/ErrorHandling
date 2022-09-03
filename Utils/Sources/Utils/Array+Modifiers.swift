@@ -27,6 +27,14 @@ extension Array where Element: Identifiable {
 }
 
 extension Array {
+  public func appendingIfNotNil(_ element: Element?, if condition: Bool = true) -> Self {
+    guard let element = element else { return self }
+    guard condition else { return self }
+    var current = self
+    current.append(element)
+    return current
+  }
+
   public func appending(_ element: Element, if condition: Bool = true) -> Self {
     guard condition else { return self }
     var current = self
@@ -40,14 +48,14 @@ extension Array {
     current.append(contentsOf: elements)
     return current
   }
-    
+
   public func appending(_ element: () async throws -> (Element), if condition: Bool = true) async rethrows -> Self {
     guard condition else { return self }
     var current = self
     current.append(try await element())
     return current
   }
-  
+
   public func appending(elements: () async throws -> ([Element]), if condition: Bool = true) async rethrows -> Self {
     guard condition else { return self }
     var current = self

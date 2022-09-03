@@ -15,50 +15,78 @@ class PaymentViewModel {
   func viewDidLoad() {
     Task {
       let response = try await PaymentUsecase().execute()
-      state.allMethods = response.map { PaymentMethodUIModel($0) }
-      
+
       state.wallet = response.compactMap {
         guard let wallet = $0 as? Wallet else { return nil }
-        return PaymentMethodUIModel(wallet)
+        return WalletPaymentMethodUIModel(wallet)
       }.first
-      
+
       state.paymentCards = response.compactMap {
         guard let card = $0 as? PaymentCard else { return nil }
-        return PaymentMethodUIModel(card)
+        return PaymentCardMethodUIModel(card)
       }
-      
+
       state.applePay = response.compactMap {
         guard let applePay = $0 as? ApplePayProtocol else { return nil }
-        return PaymentMethodUIModel(applePay)
+        return ApplePayPaymentMethodUIModel(
+          applePay,
+          applePay.status == .needsSetup ? "Setup Apple Pay" : "Pay with Apple")
       }.first
     }
   }
 
-  func didSelect(_ method: PaymentMethodUIModel) {
-    state.selectedPaymentMethod = method
+  func didTapApplePay() {
+    if state.applePay?.needsSetup == true {
+      // Show Setup Screen
+    } else {
+      // Pay with Apple
+    }
   }
 
-  func isSelected(_ method: PaymentMethodUIModel) -> Bool {
-    state.selectedPaymentMethod?.id == method.id
+  func didToggleWallet() {
+    state.wallet?.isSelected.toggle()
+  }
+
+  func didSelect(_ paymentCard: PaymentCardMethodUIModel) {
+    state.paymentCards = state.paymentCards.map {
+      var updatedCard = $0
+      updatedCard.isSelected = $0.id == paymentCard.id
+      return updatedCard
+    }
   }
 
   func addNewPaymentMethod() { }
   func authorizePurchase() { }
 }
 
+// MARK: - PaymentMethodUIModel
+
+protocol PaymentMethodUIModel {
+  var id: UUID { get }
+  var title: String { get }
+  var subtitle: String? { get }
+  var icon: ImageAsset { get }
+  var isSelected: Bool { get set }
+}
+
 extension PaymentViewModel {
   struct State {
-    var wallet: PaymentMethodUIModel?
-    var paymentCards: [PaymentMethodUIModel] = []
-    var applePay: PaymentMethodUIModel?
-    var allMethods: [PaymentMethodUIModel] = []
-    var selectedPaymentMethod: PaymentMethodUIModel?
-    
+    var wallet: WalletPaymentMethodUIModel?
+    var paymentCards: [PaymentCardMethodUIModel] = []
+    var applePay: ApplePayPaymentMethodUIModel?
+
     var error: PresentationError?
     var message: SuccessMessage?
   }
 
-  struct PaymentMethodUIModel: Identifiable {
+  struct PaymentCardMethodUIModel: PaymentMethodUIModel, Identifiable {
+    // MARK: Internal
+    let id: UUID
+    let title: String
+    let subtitle: String?
+    let icon: ImageAsset
+    var isSelected = false
+
     // MARK: Lifecycle
 
     init(id: UUID, title: String, subtitle: String? = nil, icon: ImageAsset) {
@@ -68,17 +96,48 @@ extension PaymentViewModel {
       self.icon = icon
     }
 
-    init(_ method: PaymentMethod) {
-      switch method {
-      case let card as PaymentCard:
-        self = .init(id: card.id, title: card.last4Digits.withPrefix("•••• "), icon: card.type.image)
-      case let wallet as Wallet:
-        self = .init(id: wallet.id, title: "Wallet", icon: Asset.PayMethods.bitcoin)
-      case let applePay as ApplePay:
-        self = .init(id: applePay.id, title: "Apple Pay", icon: Asset.PayMethods.applepay)
-      default:
-        self = .init(id: .init(), title: .empty, icon: Asset.PayMethods.visa)
-      }
+    init(_ card: PaymentCard) {
+      self = .init(id: card.id, title: card.last4Digits.withPrefix("•••• "), icon: card.type.image)
+    }
+  }
+
+  struct WalletPaymentMethodUIModel: PaymentMethodUIModel, Identifiable {
+    let id: UUID
+    let title: String
+    let credit: Money
+    let subtitle: String?
+    let icon: ImageAsset
+    var isSelected = false
+
+    init(_ wallet: Wallet) {
+      self = .init(id: wallet.id, title: "Wallet", credit: wallet.balance, icon: Asset.PayMethods.bitcoin)
+    }
+
+    init(id: UUID, title: String, credit: Money, icon: ImageAsset) {
+      self.id = id
+      self.title = title
+      self.credit = credit
+      self.icon = icon
+      subtitle = credit.display()
+    }
+  }
+
+  struct ApplePayPaymentMethodUIModel: PaymentMethodUIModel, Identifiable {
+    // MARK: Lifecycle
+
+    init(
+      _ applePay: ApplePayProtocol,
+      _ title: String)
+    {
+      self = .init(id: applePay.id, title: title, needsSetup: applePay.status == .needsSetup, icon: Asset.PayMethods.applepay)
+    }
+
+    init(id: UUID, title: String, needsSetup: Bool, icon: ImageAsset) {
+      self.id = id
+      self.title = title
+      self.needsSetup = needsSetup
+      self.icon = icon
+      subtitle = nil
     }
 
     // MARK: Internal
@@ -86,7 +145,9 @@ extension PaymentViewModel {
     let id: UUID
     let title: String
     let subtitle: String?
+    let needsSetup: Bool
     let icon: ImageAsset
+    var isSelected = false
   }
 }
 

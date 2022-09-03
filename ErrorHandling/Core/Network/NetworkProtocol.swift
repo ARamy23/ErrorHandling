@@ -9,5 +9,5 @@ import Combine
 import Foundation
 
 public protocol NetworkProtocol {
-    func call<T: Decodable, U: Endpoint>(api: U, model: T.Type) async throws -> T
+  func call<T: Decodable, U: Endpoint>(api: U, model: T.Type) async throws -> T
 }

@@ -17,15 +17,7 @@ protocol WalletRepositoryProtocol {
 
 class WalletRepository: WalletRepositoryProtocol {
   func fetchWallet() async throws -> Wallet {
-    if Bool.random() {
-      return Wallet(balance: .init(value: Bool.random() ? 425.0 : 0.0))
-    } else {
-      throw [
-        RepositoryError.noWalletFound,
-        RepositoryError.bannedWallet,
-        RepositoryError.walletInReview,
-      ][Int.random(in: 0...2)]
-    }
+    Wallet(balance: .init(value: 425.0))
   }
 }
 

@@ -8,6 +8,8 @@
 public typealias HTTPHeaders = [String: String]
 public typealias HTTPParameters = [String: Any]
 
+// MARK: - Endpoint
+
 /// A protocol that carries the request details for the network manager to use
 ///
 ///
@@ -17,58 +19,62 @@ public typealias HTTPParameters = [String: Any]
 /// and we can also use it with any Networking Pod like Alamofire or Moya through
 /// an adapter pattern if needed
 public protocol Endpoint {
-    var baseURL: String { get }
-    var path: String { get }
-    var headers: HTTPHeaders { get }
-    var parameters: HTTPParameters { get }
-    var encoding: ParametersEncoding { get }
-    var method: HTTPMethod { get }
+  var baseURL: String { get }
+  var path: String { get }
+  var headers: HTTPHeaders { get }
+  var parameters: HTTPParameters { get }
+  var encoding: ParametersEncoding { get }
+  var method: HTTPMethod { get }
 }
 
-public extension Endpoint {
-    /// Base URL for calling endpoints which is configurable according to Build
-    /// Configurations
-    var baseURL: String {
-        return "https://62ead78e705264f263d00a36.mockapi.io/api/v1/"
-    }
+extension Endpoint {
+  /// Base URL for calling endpoints which is configurable according to Build
+  /// Configurations
+  public var baseURL: String {
+    "https://62ead78e705264f263d00a36.mockapi.io/api/v1/"
+  }
 
-    var headers: HTTPHeaders {
-        defaultHeaders()
-    }
+  public var headers: HTTPHeaders {
+    defaultHeaders()
+  }
 
-    /// Defaults to JSONEncoding in case of POST, and URLEncoding GET
-    /// Also Overridable in children in case of Composite Encoding or Irregular cases from the BE
-    var encoding: ParametersEncoding {
-        switch method {
-        case .POST:
-            return .jsonEncoding
-        case .GET:
-            return .urlEncoding
-        }
+  /// Defaults to JSONEncoding in case of POST, and URLEncoding GET
+  /// Also Overridable in children in case of Composite Encoding or Irregular cases from the BE
+  public var encoding: ParametersEncoding {
+    switch method {
+    case .POST:
+      return .jsonEncoding
+    case .GET:
+      return .urlEncoding
     }
+  }
 
-    func defaultHeaders() -> HTTPHeaders {
-        return [
-            "Accept-Language": "en",
-            "Accept": "application/json",
-            "Content-Type": "application/json",
-        ]
-    }
+  public func defaultHeaders() -> HTTPHeaders {
+    [
+      "Accept-Language": "en",
+      "Accept": "application/json",
+      "Content-Type": "application/json",
+    ]
+  }
 }
+
+// MARK: - ParametersEncoding
 
 /// Determines how the network manager will encode the parameters when firing the
 /// request
 public enum ParametersEncoding {
-    /// Encodes the parameters as url query parameters
-    case urlEncoding
-    /// Encodes the parameters in the body of the request
-    case jsonEncoding
-    /// Encodes the parameters as a multipart form data and file data
-    case multipartEncoding
+  /// Encodes the parameters as url query parameters
+  case urlEncoding
+  /// Encodes the parameters in the body of the request
+  case jsonEncoding
+  /// Encodes the parameters as a multipart form data and file data
+  case multipartEncoding
 }
+
+// MARK: - HTTPMethod
 
 /// HTTPMethods enum in String to ease generating Request and avoid switching and enjoy syntactic sugar
 public enum HTTPMethod: String {
-    case GET
-    case POST
+  case GET
+  case POST
 }

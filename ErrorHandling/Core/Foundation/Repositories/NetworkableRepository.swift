@@ -9,6 +9,6 @@ import Foundation
 
 protocol NetworkableRepository {
   var network: NetworkProtocol { get }
-  
+
   func adapt(_ error: Error) -> RepositoryError
 }

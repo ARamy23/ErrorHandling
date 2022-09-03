@@ -7,20 +7,24 @@
 
 import Foundation
 
+// MARK: - PaymentCardsEndpoint
+
 enum PaymentCardsEndpoint {
-    case fetch
+  case fetch
 }
 
+// MARK: Endpoint
+
 extension PaymentCardsEndpoint: Endpoint {
-    var path: String {
-        "payment-cards"
-    }
-    
-    var parameters: HTTPParameters {
-        [:]
-    }
-    
-    var method: HTTPMethod {
-        .GET
-    }
+  var path: String {
+    "payment-cards"
+  }
+
+  var parameters: HTTPParameters {
+    [:]
+  }
+
+  var method: HTTPMethod {
+    .GET
+  }
 }

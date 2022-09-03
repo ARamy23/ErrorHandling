@@ -7,9 +7,11 @@
 
 import Foundation
 
+// MARK: - NetworkError
+
 public struct NetworkError: Error {
   let underlyingError: Error?
-  
+
   init(underlyingError: Error? = nil) {
     self.underlyingError = underlyingError
   }
