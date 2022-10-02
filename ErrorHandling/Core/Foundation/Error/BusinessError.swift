@@ -7,10 +7,12 @@
 
 import Foundation
 
-public struct BusinessError: Error {
-  public let underlyingError: Error?
+public protocol BusinessError: Error { }
 
-  public init(underlyingError: Error?) {
-    self.underlyingError = underlyingError
-  }
+public struct UnknownBusinessError: BusinessError {
+	public let underlyingError: Error?
+	
+	public init(underlyingError: Error?) {
+		self.underlyingError = underlyingError
+	}
 }

@@ -18,13 +18,13 @@ class PaymentViewController: BaseViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
     title = "Payment"
-    viewModel.viewDidLoad()
+    viewModel.fetchPaymentMethods()
     update()
     bind()
   }
 
   func update() {
-    show(content: paymentMethodsSection(), addNewPaymentMethodSection())
+    show(content: walletSection(), paymentMethodsSection(), addNewPaymentMethodSection())
     showBottom(content: bottomContentSection())
   }
 }
@@ -88,12 +88,19 @@ extension PaymentViewController {
     }.store(in: &cancellables)
   }
 
-  private func paymentMethodsSection() -> DSSection {
+  private func walletSection() -> DSSection {
     [DSViewModel]()
       .appendingIfNotNil(viewModel.state.wallet.map { makeWalletViewModel(from: $0) })
+      .appending(DSSpaceVM(type: .custom(24)))
+      .list()
+      .headlineHeader("Personal Wallet", size: 16)
+  }
+  
+  private func paymentMethodsSection() -> DSSection {
+    [DSViewModel]()
       .appending(elements: viewModel.state.paymentCards.map { makeCardViewModel(from: $0) })
       .list()
-      .headlineHeader("Select your preferred payment method.", size: 16)
+      .headlineHeader("Payment Cards", size: 16)
   }
 
   private func makeCardViewModel(from card: PaymentViewModel.PaymentCardMethodUIModel) -> DSViewModel {

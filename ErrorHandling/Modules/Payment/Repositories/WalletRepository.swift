@@ -17,13 +17,21 @@ protocol WalletRepositoryProtocol {
 
 class WalletRepository: WalletRepositoryProtocol {
   func fetchWallet() async throws -> Wallet {
-    Wallet(balance: .init(value: 425.0))
+		guard Bool.random() else { throw WalletRepositoryError.noWalletFound }
+		return Wallet(balance: .init(value: 425.0))
   }
 }
 
 // MARK: - NoWalletFoundError
-extension RepositoryError {
-  static let noWalletFound: RepositoryError = .init()
-  static let bannedWallet: RepositoryError = .init()
-  static let walletInReview: RepositoryError = .init()
+enum WalletRepositoryError: RepositoryError {
+	case noWalletFound
+	case banned
+	case inReview(_ state: ReviewState)
+}
+
+extension WalletRepositoryError {
+	enum ReviewState {
+		case pending
+		case beingProcessed
+	}
 }

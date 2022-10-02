@@ -40,6 +40,8 @@ final class PaymentUsecase: Usecase<[PaymentMethod]> {
     await addPaymentCardsIfPossible(to: &methods)
     await addApplePayIfPossible(to: &methods)
 
+		guard !methods.isEmpty else { throw PaymentUsecaseError.noPaymentMethodsFound }
+
     return methods
   }
 
@@ -49,7 +51,7 @@ final class PaymentUsecase: Usecase<[PaymentMethod]> {
     if flags.wallet {
       do {
         methods.append(try await walletRepository.fetchWallet())
-      } catch let error as NetworkError {
+      } catch let error as WalletRepositoryError {
         LoggersManager.error(error)
       } catch {
         LoggersManager.error(message: "Unknown error caught: \(error)")
@@ -60,7 +62,7 @@ final class PaymentUsecase: Usecase<[PaymentMethod]> {
 
 extension PaymentUsecase {
   private func addApplePayIfPossible(to methods: inout [PaymentMethod]) async {
-    guard flags.applePay, applePay.status.isUsable else { return }
+    guard flags.applePay else { return }
     methods.append(applePay)
   }
 
@@ -85,4 +87,8 @@ extension PaymentUsecase {
       LoggersManager.error(message: "\(error)")
     }
   }
+}
+
+enum PaymentUsecaseError: BusinessError {
+	case noPaymentMethodsFound
 }

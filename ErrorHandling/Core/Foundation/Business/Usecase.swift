@@ -13,8 +13,6 @@ open class Usecase<Model> {
   open func validate() throws { }
   open func process() async throws -> Model { fatalError("This is meant to be overriden") }
 
-  open func adapt(_ error: Error) -> BusinessError { .init(underlyingError: error) }
-
   open func onSuccess(_: Model) { }
   open func onFailure(_: Error) { }
 

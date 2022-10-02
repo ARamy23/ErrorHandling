@@ -12,28 +12,38 @@ import Foundation
 class PaymentViewModel {
   @Published var state: State = .init()
 
-  func viewDidLoad() {
-    Task {
-      let response = try await PaymentUsecase().execute()
+	fileprivate func updateState(_ response: [PaymentMethod]) {
+		state.wallet = response.compactMap {
+			guard let wallet = $0 as? Wallet else { return nil }
+			return WalletPaymentMethodUIModel(wallet)
+		}.first
 
-      state.wallet = response.compactMap {
-        guard let wallet = $0 as? Wallet else { return nil }
-        return WalletPaymentMethodUIModel(wallet)
-      }.first
+		state.paymentCards = response.compactMap {
+			guard let card = $0 as? PaymentCard else { return nil }
+			return PaymentCardMethodUIModel(card)
+		}
 
-      state.paymentCards = response.compactMap {
-        guard let card = $0 as? PaymentCard else { return nil }
-        return PaymentCardMethodUIModel(card)
-      }
+		state.applePay = response.compactMap {
+			guard let applePay = $0 as? ApplePayProtocol else { return nil }
+			return ApplePayPaymentMethodUIModel(
+				applePay,
+				applePay.status == .needsSetup ? "Setup Apple Pay" : "Pay with Apple")
+		}.first
+	}
 
-      state.applePay = response.compactMap {
-        guard let applePay = $0 as? ApplePayProtocol else { return nil }
-        return ApplePayPaymentMethodUIModel(
-          applePay,
-          applePay.status == .needsSetup ? "Setup Apple Pay" : "Pay with Apple")
-      }.first
-    }
-  }
+	func fetchPaymentMethods() {
+		Task {
+			do {
+				updateState(try await PaymentUsecase().execute())
+			} catch PaymentUsecaseError.noPaymentMethodsFound {
+				state.isEmpty = true
+			} catch is UnknownBusinessError {
+				state.error = .default
+			} catch {
+				state.error = .default
+			}
+		}
+	}
 
   func didTapApplePay() {
     if state.applePay?.needsSetup == true {
@@ -75,6 +85,8 @@ extension PaymentViewModel {
     var paymentCards: [PaymentCardMethodUIModel] = []
     var applePay: ApplePayPaymentMethodUIModel?
 
+		var isEmpty: Bool = true
+
     var error: PresentationError?
     var message: SuccessMessage?
   }
@@ -110,20 +122,25 @@ extension PaymentViewModel {
     var isSelected = false
 
     init(_ wallet: Wallet) {
-      self = .init(id: wallet.id, title: "Wallet", credit: wallet.balance, icon: Asset.PayMethods.bitcoin)
+      self = .init(id: wallet.id, credit: wallet.balance, icon: Asset.PayMethods.bitcoin)
     }
 
-    init(id: UUID, title: String, credit: Money, icon: ImageAsset) {
+    init(id: UUID, credit: Money, icon: ImageAsset) {
       self.id = id
-      self.title = title
+      self.title = credit.display()
       self.credit = credit
       self.icon = icon
-      subtitle = credit.display()
+      subtitle = "Use wallet's credit first"
     }
   }
 
   struct ApplePayPaymentMethodUIModel: PaymentMethodUIModel, Identifiable {
-    // MARK: Lifecycle
+		let id: UUID
+		let title: String
+		let subtitle: String?
+		let needsSetup: Bool
+		let icon: ImageAsset
+		var isSelected = false
 
     init(
       _ applePay: ApplePayProtocol,
@@ -139,15 +156,6 @@ extension PaymentViewModel {
       self.icon = icon
       subtitle = nil
     }
-
-    // MARK: Internal
-
-    let id: UUID
-    let title: String
-    let subtitle: String?
-    let needsSetup: Bool
-    let icon: ImageAsset
-    var isSelected = false
   }
 }
 
