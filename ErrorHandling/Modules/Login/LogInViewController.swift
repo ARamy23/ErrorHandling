@@ -29,7 +29,6 @@ open class LogInViewController: BaseViewController {
   // MARK: Private
 
   private let viewModel: LoginViewModel = .init()
-  private var cancellables = Set<AnyCancellable>()
 }
 
 extension LogInViewController {

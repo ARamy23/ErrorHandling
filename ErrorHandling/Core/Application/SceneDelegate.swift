@@ -24,7 +24,7 @@ extension SceneDelegate {
     window = UIWindow(windowScene: scene)
     defer { window?.makeKeyAndVisible() }
     set(
-      rootViewTo: UINavigationController(rootViewController: Inject.ViewControllerHost(LogInViewController())))
+      rootViewTo: UINavigationController(rootViewController: Inject.ViewControllerHost(PaymentViewController())))
   }
 }
 

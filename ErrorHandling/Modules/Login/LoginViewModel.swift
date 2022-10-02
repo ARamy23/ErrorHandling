@@ -44,7 +44,7 @@ extension LoginViewModel {
     appleViewModel.$state.sink { state in
       switch state {
       case .failure(let error):
-        self.state.error = error
+				self.state.error = .init(title: error.title, description: error.description)
       case .success(let message):
         self.state.message = message
       default:

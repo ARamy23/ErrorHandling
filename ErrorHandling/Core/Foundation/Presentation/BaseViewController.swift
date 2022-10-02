@@ -5,12 +5,15 @@
 //  Created by Ahmed Ramy on 20/08/2022.
 //
 
+import Combine
 import DSKit
 import Foundation
 import SPIndicator
 import UIKit
 
 open class BaseViewController: DSViewController {
+  // MARK: Open
+
   open func handle(error: PresentationError?) {
     guard let error = error else { return }
     switch error.type {
@@ -23,4 +26,8 @@ open class BaseViewController: DSViewController {
     guard let success = success else { return }
     SPIndicator.present(title: success.title, message: success.description, preset: .done, haptic: .success, from: .bottom)
   }
+
+  // MARK: Internal
+
+  var cancellables = Set<AnyCancellable>()
 }

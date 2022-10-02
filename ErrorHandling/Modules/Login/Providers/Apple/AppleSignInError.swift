@@ -8,16 +8,12 @@
 import Foundation
 import UIKit.UIImage
 
-public struct AppleSignInError: PresentationError {
+public struct AppleSignInError {
   public let title: String
   public let description: String?
-  public let type: PresentationMethod
-  public let icon: UIImage?
 
-  public init(title: String, description: String? = nil, type: PresentationMethod = .indicator, icon: UIImage? = nil) {
+  public init(title: String, description: String? = nil) {
     self.title = title
     self.description = description
-    self.type = type
-    self.icon = icon
   }
 }
